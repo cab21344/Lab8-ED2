@@ -1,0 +1,84 @@
+//María Daniela Cabrera Porras, 21344
+//Pre-Laboratorio 8 - E. Digitial 2
+
+#include <Arduino.h>
+#include <SPI.h>
+#include <SD.h>
+
+void setup(){ //setup
+  Serial.begin(115200);
+  SPI.setModule(0); 
+}
+
+//Menú de figuras **********************************************************************
+void menu(){
+  Serial.println("Selecciona tu carta: ");
+  Serial.println("1) Espada");
+  Serial.println("2) Trebol");
+  Serial.println("3) Corazón");
+  Serial.println("4) Rombo");
+}
+
+
+void loop(){
+  displayMenu();
+
+  char selection;
+  while(!Serial.available()){ //espera a que se ingrese opción
+  }
+
+  selection = Serial.read();
+
+  switch(selection){
+    case '1':
+            Serial.println("                .               \n"
+                        "             .......            \n"
+                        "          .............         \n"
+                        "       ...................      \n"
+                        "     .......................    \n"
+                        "   ..........................   \n"
+                        "   ...........................  \n"
+                        "   ..........................   \n"
+                        "     .......................    \n"
+                        "             .......            \n"
+                        "           ..........            ");
+            break;
+    case '2':
+         Serial.println("            .........           \n"
+                        "           ............         \n"
+                        "           ............         \n"
+                        "      .....................     \n"
+                        "     .......................    \n"
+                        "     .......................    \n"
+                        "       ....................     \n"
+                        "              ......            \n"
+                        "            ..........           ");
+            break;
+     case '3':
+         Serial.println("        /////       */////      \n"
+                        "     //////////*  //////////    \n"
+                        "    /////////////////////////   \n"
+                        "    /////////////////////////   \n"
+                        "     ///////////////////////    \n"
+                        "      /////////////////////     \n"
+                        "        /////////////////       \n"
+                        "           ///////////*         \n"
+                        "             ///////            \n"
+                        "               *//              ");
+            break;
+    case '4':
+      Serial.println("               */*              \n"
+                     "             ***/***            \n"
+                     "           ///////////          \n"
+                     "        /***/***/***/***/       \n"
+                     "    .*/*/*/*/*/*/*/*/*/*/*/*    \n"
+                     "     ***/***/***/***/***/***    \n"
+                     "        ////////////////*       \n"
+                     "           */***/***/*          \n"
+                     "             */*/*/*            \n"
+                     "               */*              ");
+      break;
+    default:
+        Serial.println("Opción no válida, prueba de nuevo");
+  }
+}
