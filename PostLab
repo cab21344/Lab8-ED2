@@ -1,0 +1,167 @@
+//María Daniela Cabrera Porras, 21344
+//Post-Laboratorio 8 - E. Digitial 2
+
+#include <Arduino.h>
+#include <SPI.h>
+#include <SD.h>
+
+File root; 
+File myFile;
+
+void setup(){ //setup
+  Serial.begin(115200);
+  SPI.setModule(0);
+
+
+//**************************************************************************************
+//Inicia la SD *************************************************************************
+//**************************************************************************************
+  Serial.println("Iniciando tarjeta SD");
+  pinMode(12, OUTPUT);
+
+  if(!SD.begin(12)){ //mensaje si no se logra inicializar la SD
+    Serial.println("Inicialización fallida");
+    return;
+  }
+  Serial.println("Tarjeta SD inicializada"); //mensaje de SD inicializada
+
+
+//**************************************************************************************
+//para abrir la SD *********************************************************************
+//**************************************************************************************
+  root = SD.open("/");
+  printDirectory(root, 0);
+  Serial.println("Listo!");  
+}
+
+//**************************************************************************************
+//Crea roots cuando se trabaja con la SD*********************************************
+//**************************************************************************************
+void printDirectory(File dir, int numTabs){
+  while(true){
+    File entry = dir.openNextFile();
+    if(! entry){
+      //no more files
+      break;
+    }
+  }
+  for (uint8_t i=0; i<numTabs; i++){
+  Serial.print("\t");
+  }
+  Serial.print(entry.name());
+  if(entry.isDirectory()){
+    Serial.println("/");
+    printDirectory(entry, numTabs+1);
+  } else{
+    Serial.print("\t \t");
+    Serial.println(entry.size(), DEC);
+  }
+  entry.close();
+}
+
+//**************************************************************************************
+//Menú de figuras **********************************************************************
+//**************************************************************************************
+void menu(){
+  Serial.println("Selecciona tu carta: ");
+  Serial.println("1) Espada");
+  Serial.println("2) Trebol");
+  Serial.println("3) Corazón");
+  Serial.println("4) Rombo");
+  Serial.println("5) Escribir propio mensaje");
+}
+
+
+//**************************************************************************************
+//Loop principal ***********************************************************************
+//**************************************************************************************
+void loop(){
+  menu();
+
+  char selection;
+  while(!Serial.available()){ //espera a que se ingrese opción
+  }
+
+
+  selection = Serial.read(); //lee opción seleccionada
+
+  switch(selection){
+    case '1':
+      root = SD.open("espada.txt"); //abre el root espada
+      if(root){
+        Serial.println("espada.txt"); //imprime root espada
+        
+        while(root.available()){
+          Serial.write(root.read());
+        }
+        root.close(); //cierra root
+       } else{
+          Serial.println("Error abriendo la figura");
+        }
+    break;
+    case '2':
+      root = SD.open("trebol.txt"); //abre root trebol
+      if(root){
+        Serial.println("trebol.txt"); //imprime root trebol
+        
+        while(root.available()){
+          Serial.write(root.read());
+        }
+        root.close(); //cierra root
+       } else{
+          Serial.println("Error abriendo la figura");
+        }
+    break;
+     case '3':
+      root = SD.open("corazon.txt"); //abre root corazon
+      if(root){
+        Serial.println("corazon.txt"); //imprime root corazon
+        
+        while(root.available()){
+          Serial.write(root.read());
+        }
+        root.close(); //cierra root
+       } else{
+          Serial.println("Error abriendo la figura");
+        }
+    break;
+    case '4':
+      root = SD.open("rombo.txt"); //abre root rombo
+      if(root){
+        Serial.println("rombo.txt"); //imprime root rombo
+        
+        while(root.available()){
+          Serial.write(root.read());
+        }
+        root.close(); //cierra root
+       } else{
+          Serial.println("Error abriendo la figura");
+        }
+    break;
+//**************************************************************************************
+//Código para que usuario haga su propia figura ****************************************
+//**************************************************************************************
+    case '5': 
+     String mensaje = "";  // Declara una cadena para almacenar el mensaje del usuario
+
+     while (Serial.available() > 0) { // Espera hasta que el usuario envíe un mensaje
+        char c = Serial.read();
+        mensaje += c;
+      }
+ // Si el usuario ha enviado un mensaje, abre el archivo y escribe el mensaje en él
+    if (!mensaje.equals("")) {
+        myFile = SD.open("test.txt", FILE_WRITE);
+        if (myFile) {
+        Serial.println("Escribiendo en test.txt...");
+       myFile.print(mensaje);
+       myFile.close();
+       Serial.println("Hecho!");
+      } else {
+          Serial.println("Error abriendo test.txt");
+      }
+  }
+     break;
+    default:
+        Serial.println("Opción no válida, prueba de nuevo");
+  }
+}
